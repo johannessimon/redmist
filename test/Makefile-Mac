@@ -1,0 +1,2 @@
+all:
+	g++ -o test -Wall main.cpp -framework GLUT -framework OpenGL -DOS_MAC
