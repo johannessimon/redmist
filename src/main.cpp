@@ -15,10 +15,12 @@ using namespace std;
 
 bool keys[256];
 double x, y;
-double speed = 1.0/1000;
+// Acceleration
+double acc = 0.01/1000;
 int timestart;
 
 
+Vec3d vA;
 Vec3d posA;
 Vec3d posB;
 
@@ -31,18 +33,17 @@ void draw()
 	timestart = glutGet(GLUT_ELAPSED_TIME);
     //cout << "timediff: " << timediff << endl;
     bool coll;
-	
-    Vec3d vA;
+
     double rA = 0.25, rB = 0.25;
 
 	if(keys['a'])
-		vA.x -= speed;
+        vA.x -= acc;
 	if(keys['d'])
-		vA.x += speed;
+        vA.x += acc;
 	if(keys['w'])
-		vA.y += speed;
+        vA.y += acc;
 	if(keys['s'])
-        vA.y -= speed;
+        vA.y -= acc;
 
     posA += timediff * vA;
 
