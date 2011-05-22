@@ -1,4 +1,4 @@
-﻿#ifdef OS_MAC
+#ifdef OS_MAC
 	#include <GLUT/glut.h>
 #else
 	#include <GL/glut.h>
@@ -9,7 +9,7 @@
 #include <limits>
 #include "util/vec3d.h"
 
-//double collision(Vec3d dPos, Vec3d dVel, double rx, double ry);
+double collision(Vec3d dPos, Vec3d dVel, double rx, double ry);
 
 using namespace std;
 
@@ -25,28 +25,39 @@ void draw()
 	
 	double timediff = (double)glutGet(GLUT_ELAPSED_TIME) - timestart;
 	timestart = glutGet(GLUT_ELAPSED_TIME);
-	//cout << "timediff: " << timediff << endl;
-	double dist = speed * timediff;
+    //cout << "timediff: " << timediff << endl;
+    bool coll;
 	
+    Vec3d vA;
+
 	if(keys['a'])
-		x -= dist;
+		vA.x -= speed;
 	if(keys['d'])
-		x += dist;
+		vA.x += speed;
 	if(keys['w'])
-		y += dist;
+		vA.y += speed;
 	if(keys['s'])
-		y -= dist;
+		vA.y -= speed;
 	
+    Vec3d posA(-1 + x, y, 0);
+    Vec3d posB(1, 0, 0);
+
+    posA += timediff * vA;
+
+    collision(posB - posA, Vec3d() - speedA, &coll);
+
+    if (coll)
+        glColor3f(1.0, 0.0, 0.0);
+
 	glLoadIdentity();
 	glPushMatrix();
-		glTranslatef(-1, 0, 0.0);
+		glTranslatef(posA.x, posA.y, posA.z);
 		glutSolidSphere(0.25, 100, 100);
 	glPopMatrix();
 	
-	glTranslatef(1,0,0);
+	glTranslatef(posA.x, posA.y, posA.z);
 	glutSolidSphere(0.25, 100, 100);
-	/*glBegin(GL_TRIANGLES);
-		glColor3f(1.0, 0.0, 0.0);
+    /*glBegin(GL_TRIANGLES);
 		glVertex3f(-0.5,-0.5,0.0);
 		glColor3f(0.0, 1.0, 0.0);
 		glVertex3f(0.5,0.0,0.0);
@@ -59,16 +70,16 @@ void draw()
 
 void keyPressed(unsigned char key, int, int)
 {
-	//keys[key] = true;
+	keys[key] = true;
 }
 
 
 void keyReleased(unsigned char key, int, int)
 {
-	//keys[key] = false;
+	keys[key] = false;
 }
 
-/*double collision(Vec3d dPos, Vec3d dVel, double rx, double ry, bool &coll)
+double collision(Vec3d dPos, Vec3d dVel, double rx, double ry, bool &coll)
 {
 	
 	double denom = 2 * (dPos.x*dVel.x + dPos.y*dVel.x);
@@ -79,8 +90,8 @@ void keyReleased(unsigned char key, int, int)
 	double nom = dPos.x*dPos.x + dPos.y*dPos.y + dPos.x*dVel.x + dPos.y*dVel.y - (rx + ry)*(rx + ry);
 	coll = true;
 	
-	return abs(nom / denum);
-}*/
+	return abs(nom / denom);
+}
 
 int main(int argc, char **argv)
 {
