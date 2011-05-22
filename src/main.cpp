@@ -1,4 +1,4 @@
-#ifdef OS_MAC
+﻿#ifdef OS_MAC
 	#include <GLUT/glut.h>
 #else
 	#include <GL/glut.h>
@@ -49,8 +49,14 @@ void draw()
 
     double t = collision(posB - posA, Vec3d() - vA, rA, rB, coll);
 
-    if (coll && t <= timediff)
+    if (coll && t <= timediff) {
+		Vec3d intersection = posB - posA + t * vA;
+		Vec3d n = (intersection - posB).normalized();
+		Vec3d r = -2 * (n * vA) * n + vA;
+		vA.x = r.x;
+		vA.y = r.y;
         glColor3f(1.0, 0.0, 0.0);
+	}
     else
         glColor3f(1.0, 1.0, 1.0);
 
