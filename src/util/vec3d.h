@@ -1,4 +1,4 @@
-#ifndef _VEC_H
+﻿#ifndef _VEC_H
 #define _VEC_H
 
 #include <cmath>
@@ -22,6 +22,11 @@ public:
 	Vec3d operator -(const Vec3d &b)
 	{
 		return Vec3d(x - b.x, y - b.y, z - b.z);
+	}
+	
+	Vec3d operator +(const Vec3d &v)
+	{
+		return Vec3d(x + v.x, y + v.y, z + v.z);
 	}
 	
 	Vec3d& operator +=(const Vec3d& v)
