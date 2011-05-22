@@ -1,4 +1,4 @@
-﻿#ifndef _VEC_H
+#ifndef _VEC_H
 #define _VEC_H
 
 #include <cmath>
@@ -31,7 +31,7 @@ public:
 		return *this;
 	}
 	
-	Vec3d operator *(const double s, const Vec3d &v)
+    friend Vec3d operator *(const double s, const Vec3d &v)
 	{
 		return Vec3d(v.x * s, v.y * s, v.z * s);
 	}
