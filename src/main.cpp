@@ -9,14 +9,18 @@
 #include <limits>
 #include "util/vec3d.h"
 
-double collision(Vec3d dPos, Vec3d dVel, double rx, double ry);
+double collision(Vec3d dPos, Vec3d dVel, double rx, double ry, bool &coll);
 
 using namespace std;
 
 bool keys[256];
 double x, y;
-double speed = 0.2/1000;
+double speed = 1.0/1000;
 int timestart;
+
+
+Vec3d posA;
+Vec3d posB;
 
 void draw()
 {
@@ -29,6 +33,7 @@ void draw()
     bool coll;
 	
     Vec3d vA;
+    double rA = 0.25, rB = 0.25;
 
 	if(keys['a'])
 		vA.x -= speed;
@@ -37,26 +42,25 @@ void draw()
 	if(keys['w'])
 		vA.y += speed;
 	if(keys['s'])
-		vA.y -= speed;
-	
-    Vec3d posA(-1 + x, y, 0);
-    Vec3d posB(1, 0, 0);
+        vA.y -= speed;
 
     posA += timediff * vA;
 
-    collision(posB - posA, Vec3d() - speedA, &coll);
+    double t = collision(posB - posA, Vec3d() - vA, rA, rB, coll);
 
-    if (coll)
+    if (coll && t <= timediff)
         glColor3f(1.0, 0.0, 0.0);
+    else
+        glColor3f(1.0, 1.0, 1.0);
 
 	glLoadIdentity();
 	glPushMatrix();
 		glTranslatef(posA.x, posA.y, posA.z);
-		glutSolidSphere(0.25, 100, 100);
+        glutSolidSphere(rA, 100, 100);
 	glPopMatrix();
 	
-	glTranslatef(posA.x, posA.y, posA.z);
-	glutSolidSphere(0.25, 100, 100);
+    glTranslatef(posB.x, posB.y, posB.z);
+    glutSolidSphere(rB, 100, 100);
     /*glBegin(GL_TRIANGLES);
 		glVertex3f(-0.5,-0.5,0.0);
 		glColor3f(0.0, 1.0, 0.0);
@@ -81,6 +85,10 @@ void keyReleased(unsigned char key, int, int)
 
 double collision(Vec3d dPos, Vec3d dVel, double rx, double ry, bool &coll)
 {
+    if (dPos.length() <= rx + ry) {
+        coll = true;
+        return 0;
+    }
 	
 	double denom = 2 * (dPos.x*dVel.x + dPos.y*dVel.x);
 	if (abs(denom) <= numeric_limits<double>::epsilon()) {
@@ -95,6 +103,9 @@ double collision(Vec3d dPos, Vec3d dVel, double rx, double ry, bool &coll)
 
 int main(int argc, char **argv)
 {
+
+    posA.x = -1.0;
+    posB.x = 0;
 	x = y = 0.0;
 	timestart = glutGet(GLUT_ELAPSED_TIME);
 	glutInit(&argc, argv);
