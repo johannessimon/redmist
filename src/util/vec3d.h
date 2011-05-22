@@ -22,6 +22,19 @@ public:
 	{
 		return Vec3d(x - b.x, y - b.y, z - b.z);
 	}
+	
+	Vec3d& operator +=(const Vec3d& v)
+	{
+		x += v.x;
+		y += v.y;
+		z += v.z;
+		return *this;
+	}
+	
+	Vec3d operator *(const double s, const Vec3d &v)
+	{
+		return Vec3d(v.x * s, v.y * s, v.z * s);
+	}
 };
 
 #endif
