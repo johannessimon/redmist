@@ -1,3 +1,7 @@
 # builds
 build
 RedMist.*
+
+#project files
+*.pro
+*.user
